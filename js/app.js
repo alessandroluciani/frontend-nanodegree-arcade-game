@@ -27,25 +27,37 @@ Enemy.prototype.render = function() {
 
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.x = 100;
-    this.y = 375;
-};
+    this.x = 200;
+    this.y = 380;
+};  
 
 Player.prototype.update = function(keyPressed) {
+    
     switch(keyPressed) {
         case 'left':
-            this.x = this.x-100;
+            if (this.x-100 >= 0) {
+                this.x = this.x-100;
+            };
             break;
         case 'up':
-            this.y = this.y-75;
+            if (this.y-85 >= 40) {
+                this.y = this.y-85;
+            };
             break;
         case 'right':
-            this.x = this.x+100;
+            if (this.x+100 <= 400) {
+                this.x = this.x+100;
+            };
             break;
         case 'down':
-            this.y = this.y+100;
+            if (this.y+85 <= 380) {
+                this.y = this.y+85;
+            };
             break;
     }
+    console.log(this.x,this.y);
+    
+    
 };
 
 Player.prototype.render = function() {
@@ -66,7 +78,6 @@ var enemy3 = new Enemy();
 
 var allEnemies = [enemy1,enemy2,enemy3];
 var player = new Player();
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
