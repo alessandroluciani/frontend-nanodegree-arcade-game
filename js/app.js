@@ -1,11 +1,40 @@
 // Enemies our player must avoid
 var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    // Variables applied to each of our instances go here,
+    // we've provided one for you to get started
+        
+    var starterValues = {
+        "xStartIni": [
+            {
+                "direction": "forward",
+                "xStart": -100
+            },
+            {
+                "direction": "backward",
+                "xStart": 500
+            }
+        ],
+        "yStartIni": [
+            45,
+            125,
+            210
+        ],
+        "speedIni": [
+            100,
+            150,
+            200
+        ]
+    };
+    
+    var xStartRandom = starterValues.xStartIni[Math.floor(Math.random() * starterValues.xStartIni.length)];
+    this.direction = xStartRandom.direction;
+    this.x = xStartRandom.xStart;
+    this.y = starterValues.yStartIni[Math.floor(Math.random() * starterValues.yStartIni.length)];
+    this.speed = starterValues.speedIni[Math.floor(Math.random() * starterValues.speedIni.length)];
+    
 };
 
 // Update the enemy's position, required method for game
@@ -14,6 +43,12 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    
+    if (this.direction === "forward") {
+        this.x = this.x+(dt*this.speed);
+    } else {
+        this.x = this.x-(dt*this.speed);
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -27,8 +62,10 @@ Enemy.prototype.render = function() {
 
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.x = 200;
-    this.y = 380;
+    var xStart = [0, 100, 200, 300, 400];
+    var yStart = [295,380];
+    this.x = xStart[Math.floor(Math.random() * xStart.length)];
+    this.y = yStart[Math.floor(Math.random() * yStart.length)];
 };  
 
 Player.prototype.update = function(keyPressed) {
@@ -40,7 +77,7 @@ Player.prototype.update = function(keyPressed) {
             };
             break;
         case 'up':
-            if (this.y-85 >= 40) {
+            if (this.y-85 >= 40) { //da ritoccare per l'arrivo del player alla zona dell'acqua
                 this.y = this.y-85;
             };
             break;
@@ -55,8 +92,7 @@ Player.prototype.update = function(keyPressed) {
             };
             break;
     }
-    console.log(this.x,this.y);
-    
+    //console.log(this.x,this.y); //da eliminare
     
 };
 
@@ -75,6 +111,7 @@ Player.prototype.handleInput = function(keyPressed) {
 var enemy1 = new Enemy();
 var enemy2 = new Enemy();
 var enemy3 = new Enemy();
+
 
 var allEnemies = [enemy1,enemy2,enemy3];
 var player = new Player();
