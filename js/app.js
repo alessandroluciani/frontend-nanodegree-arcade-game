@@ -71,8 +71,12 @@ Enemy.prototype.render = function() {
     if ((this.x <= (player.x + 20)) && (this.x >= (player.x - 20)) && (this.y <= player.y + 20) && (this.y >= (player.y - 20)))
     {
         player.start();
+        playerLives--;
+        if (playerLives === 0) {
+            console.log("Game Over");
+        }
     }
-    //console.log(player.x,player.y)
+    
 };
 
 // Now write your own player class
@@ -131,14 +135,23 @@ Player.prototype.handleInput = function(keyPressed) {
 
 Player.prototype.levelUp = function() {
     
-    if (gameLevel <= 9) {
+    if (gameLevel <= 4) {
         gameLevel++;
         player.start();
         allEnemies.push(new Enemy());
+    } else {
+        player.start();
+        console.log("Vinto " + gameLevel);
+        canvasGraph("vinto");
+        allEnemies = [];
     }
     
 };
 
+////
+var canvasGraph = function(action){
+    console.log(action);
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
