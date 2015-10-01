@@ -5,7 +5,12 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-        
+    this.start();    
+};
+
+
+Enemy.prototype.start = function() {
+
     var starterValues = {
         "xStartIni": [
             {
@@ -25,7 +30,9 @@ var Enemy = function() {
         "speedIni": [
             100,
             150,
-            200
+            200,
+            250,
+            300
         ]
     };
     
@@ -35,7 +42,8 @@ var Enemy = function() {
     this.y = starterValues.yStartIni[Math.floor(Math.random() * starterValues.yStartIni.length)];
     this.speed = starterValues.speedIni[Math.floor(Math.random() * starterValues.speedIni.length)];
     
-};
+    
+}
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -46,14 +54,25 @@ Enemy.prototype.update = function(dt) {
     
     if (this.direction === "forward") {
         this.x = this.x+(dt*this.speed);
+        if (this.x >= 550) {
+            this.start();
+        }
     } else {
         this.x = this.x-(dt*this.speed);
+        if (this.x <= -150) {
+            this.start();
+        }
     }
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    if ((this.x <= (player.x + 20)) && (this.x >= (player.x - 20)) && (this.y <= player.y + 20) && (this.y >= (player.y - 20)))
+    {
+        player.start();
+    }
+    //console.log(player.x,player.y)
 };
 
 // Now write your own player class
@@ -62,11 +81,15 @@ Enemy.prototype.render = function() {
 
 var Player = function() {
     this.sprite = 'images/char-boy.png';
+    this.start();
+};
+
+Player.prototype.start = function(keyPressed) {
     var xStart = [0, 100, 200, 300, 400];
     var yStart = [295,380];
     this.x = xStart[Math.floor(Math.random() * xStart.length)];
     this.y = yStart[Math.floor(Math.random() * yStart.length)];
-};  
+}
 
 Player.prototype.update = function(keyPressed) {
     
@@ -79,6 +102,8 @@ Player.prototype.update = function(keyPressed) {
         case 'up':
             if (this.y-85 >= 40) { //da ritoccare per l'arrivo del player alla zona dell'acqua
                 this.y = this.y-85;
+            } else {
+                this.levelUp();
             };
             break;
         case 'right':
@@ -104,17 +129,27 @@ Player.prototype.handleInput = function(keyPressed) {
     this.update(keyPressed);
 };
 
+Player.prototype.levelUp = function() {
+    
+    if (gameLevel <= 9) {
+        gameLevel++;
+        player.start();
+        allEnemies.push(new Enemy());
+    }
+    
+};
+
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var enemy1 = new Enemy();
-var enemy2 = new Enemy();
-var enemy3 = new Enemy();
 
-
-var allEnemies = [enemy1,enemy2,enemy3];
+var gameLevel = 1;
+var playerLives = 3;
+var allEnemies = [new Enemy()];
 var player = new Player();
+
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
