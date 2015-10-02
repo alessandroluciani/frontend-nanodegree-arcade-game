@@ -5,21 +5,23 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-    this.start();    
+    this.reset();    
 };
 
 
-Enemy.prototype.start = function() {
+Enemy.prototype.reset = function() {
 
     var starterValues = {
         "xStartIni": [
             {
                 "direction": "forward",
-                "xStart": -100
+                "xStart": -100,
+                "image" : "images/enemy-bug.png"
             },
             {
                 "direction": "backward",
-                "xStart": 500
+                "xStart": 500,
+                "image" : "images/enemy-bug-rev.png"
             }
         ],
         "yStartIni": [
@@ -38,6 +40,7 @@ Enemy.prototype.start = function() {
     
     var xStartRandom = starterValues.xStartIni[Math.floor(Math.random() * starterValues.xStartIni.length)];
     this.direction = xStartRandom.direction;
+    this.sprite = xStartRandom.image;
     this.x = xStartRandom.xStart;
     this.y = starterValues.yStartIni[Math.floor(Math.random() * starterValues.yStartIni.length)];
     this.speed = starterValues.speedIni[Math.floor(Math.random() * starterValues.speedIni.length)];
@@ -55,12 +58,12 @@ Enemy.prototype.update = function(dt) {
     if (this.direction === "forward") {
         this.x = this.x+(dt*this.speed);
         if (this.x >= 550) {
-            this.start();
+            this.reset();
         }
     } else {
         this.x = this.x-(dt*this.speed);
         if (this.x <= -150) {
-            this.start();
+            this.reset();
         }
     }
 };
@@ -70,7 +73,7 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     if ((this.x <= (player.x + 20)) && (this.x >= (player.x - 20)) && (this.y <= player.y + 20) && (this.y >= (player.y - 20)))
     {
-        player.start();
+        player.reset();
         playerLives--;
         if (playerLives === 0) {
             console.log("Game Over");
@@ -84,11 +87,11 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 
 var Player = function() {
-    this.sprite = 'images/char-boy.png';
-    this.start();
+    this.sprite = 'images/char-princess-girl.png';
+    this.reset();
 };
 
-Player.prototype.start = function(keyPressed) {
+Player.prototype.reset = function(keyPressed) {
     var xStart = [0, 100, 200, 300, 400];
     var yStart = [295,380];
     this.x = xStart[Math.floor(Math.random() * xStart.length)];
@@ -104,7 +107,7 @@ Player.prototype.update = function(keyPressed) {
             };
             break;
         case 'up':
-            if (this.y-85 >= 40) { //da ritoccare per l'arrivo del player alla zona dell'acqua
+            if (this.y-85 >= 40) { 
                 this.y = this.y-85;
             } else {
                 this.levelUp();
@@ -137,21 +140,32 @@ Player.prototype.levelUp = function() {
     
     if (gameLevel <= 4) {
         gameLevel++;
-        player.start();
+        player.reset();
         allEnemies.push(new Enemy());
     } else {
-        player.start();
+        player.reset();
         console.log("Vinto " + gameLevel);
-        canvasGraph("vinto");
+        //canvasGraph("vinto");
         allEnemies = [];
     }
     
 };
 
 ////
-var canvasGraph = function(action){
-    console.log(action);
+/*
+var Canvas = function() {
+    var c = document.getElementsByTagName("canvas");
+    var ctx = c.getContext("2d");
+    console.log(ctx);
+    
+    //var c = document.getElementById("myCanvas");
+    //var ctx = c.getContext("2d");
 }
+*/
+console.log(this);
+
+
+
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -160,6 +174,7 @@ var canvasGraph = function(action){
 
 var gameLevel = 1;
 var playerLives = 3;
+//var canvasInfo = new Canvas();
 var allEnemies = [new Enemy()];
 var player = new Player();
 
