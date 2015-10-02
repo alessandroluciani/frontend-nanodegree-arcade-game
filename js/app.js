@@ -7,9 +7,7 @@ var Enemy = function() {
     this.reset();    
 };
 
-
 Enemy.prototype.reset = function() {
-
     //Json structure used to prepare the properties for enemy object.
     //I will use js random method to change direction,StartIni,yStartIni and speedIni 
     var starterValues = {
@@ -38,7 +36,6 @@ Enemy.prototype.reset = function() {
             300
         ]
     };
-    
     //Random values for single enemy istance.
     var StartRandom = starterValues.StartIni[Math.floor(Math.random() * starterValues.StartIni.length)];
     this.direction = StartRandom.direction;
@@ -46,7 +43,6 @@ Enemy.prototype.reset = function() {
     this.x = StartRandom.xStart;
     this.y = starterValues.yStartIni[Math.floor(Math.random() * starterValues.yStartIni.length)];
     this.speed = starterValues.speedIni[Math.floor(Math.random() * starterValues.speedIni.length)];
-    
 };
 
 // Update the enemy's position, required method for game
@@ -55,7 +51,6 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    
     //This "if" section let you to manage enemy with 2 different directions and starts.
     if (this.direction === "forward") {
         this.x = this.x+(dt*this.speed);
@@ -77,14 +72,12 @@ Enemy.prototype.render = function() {
     if ((this.x <= (player.x + 30)) && (this.x >= (player.x - 30)) && (this.y <= player.y + 30) && (this.y >= (player.y - 30)))
     {
         sb.playerdie();        
-    };
-    
+    };  
 };
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-
 var Player = function() {
     //Princess Poppy :)
     this.sprite = 'images/char-princess-girl.png'; 
@@ -100,12 +93,10 @@ Player.prototype.reset = function(keyPressed) {
     this.y = yStart[Math.floor(Math.random() * yStart.length)];
 };
 
-Player.prototype.update = function(keyPressed) {
-    
+Player.prototype.update = function(keyPressed) {  
     //I use sb.status to control if the game is finished (win) or nolives (nowin)
     //and block the keyboard
     if ((sb.status !== "win") && (sb.status !== "nowin")) {
-    
         switch(keyPressed) {
             case 'left':
                 if (this.x-100 >= 0) {
@@ -130,9 +121,7 @@ Player.prototype.update = function(keyPressed) {
                 };
                 break;
         };
-        
     };
-    
 };
 
 Player.prototype.render = function() {
@@ -152,17 +141,14 @@ Player.prototype.levelUp = function() {
 // playerdie method remove 1 playerlive, remove points (-50points) and reset player
 // layerpoints method add points (100points) or remove point (-50points).
 // render method render informations about level,points and lives and manage "you win" message or "game over"
-
 var Scoreboard = function() {
     this.status = "play";
     this.reset();
 };
 
 Scoreboard.prototype.levelUp = function() {
-    
     this.playerpoints('add');
     player.reset();
-    
     if (this.gameLevel < this.maxLevel) {
         this.gameLevel++;
         allEnemies.push(new Enemy());
@@ -170,7 +156,6 @@ Scoreboard.prototype.levelUp = function() {
         this.status = "win";
         allEnemies = [];
     };
-    
 };
 
 Scoreboard.prototype.playerdie = function() {
@@ -197,7 +182,6 @@ Scoreboard.prototype.render = function() {
     ctx.fillText("LEVEL : " + this.gameLevel,10,75);
     ctx.fillText("LIVES : " + this.playerLives,10,100);
     ctx.fillText("POINTS : " + this.playerPoints,10,125);
-    
     if (this.status === "win") {
         ctx.font = "40px Arial";
         ctx.fillText('YOU WIN!', 150, 275);
@@ -217,10 +201,8 @@ Scoreboard.prototype.reset = function() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
 // Scoreboard object
 var sb = new Scoreboard();
-
 var allEnemies = [new Enemy()];
 var player = new Player();
 
