@@ -45,8 +45,7 @@ Enemy.prototype.reset = function() {
     this.y = starterValues.yStartIni[Math.floor(Math.random() * starterValues.yStartIni.length)];
     this.speed = starterValues.speedIni[Math.floor(Math.random() * starterValues.speedIni.length)];
     
-    
-}
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -59,13 +58,13 @@ Enemy.prototype.update = function(dt) {
         this.x = this.x+(dt*this.speed);
         if (this.x >= 550) {
             this.reset();
-        }
+        };
     } else {
         this.x = this.x-(dt*this.speed);
         if (this.x <= -150) {
             this.reset();
-        }
-    }
+        };
+    };
 };
 
 // Draw the enemy on the screen, required method for game
@@ -73,12 +72,8 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     if ((this.x <= (player.x + 20)) && (this.x >= (player.x - 20)) && (this.y <= player.y + 20) && (this.y >= (player.y - 20)))
     {
-        player.reset();
-        playerLives--;
-        if (playerLives === 0) {
-            console.log("Game Over");
-        }
-    }
+        sb.playerdie();        
+    };
     
 };
 
@@ -96,7 +91,7 @@ Player.prototype.reset = function(keyPressed) {
     var yStart = [295,380];
     this.x = xStart[Math.floor(Math.random() * xStart.length)];
     this.y = yStart[Math.floor(Math.random() * yStart.length)];
-}
+};
 
 Player.prototype.update = function(keyPressed) {
     
@@ -124,7 +119,6 @@ Player.prototype.update = function(keyPressed) {
             };
             break;
     }
-    //console.log(this.x,this.y); //da eliminare
     
 };
 
@@ -137,44 +131,77 @@ Player.prototype.handleInput = function(keyPressed) {
 };
 
 Player.prototype.levelUp = function() {
+    sb.levelUp();
+};
+
+////
+
+var Scoreboard = function() {
+    this.status = "play";
+    this.reset();
+};
+
+Scoreboard.prototype.levelUp = function() {
     
-    if (gameLevel <= 4) {
-        gameLevel++;
-        player.reset();
+    this.playerpoints('add');
+    player.reset();
+    
+    if (this.gameLevel < this.maxLevel) {
+        this.gameLevel++;
         allEnemies.push(new Enemy());
     } else {
-        player.reset();
-        console.log("Vinto " + gameLevel);
-        //canvasGraph("vinto");
+        this.status = "win";
         allEnemies = [];
     }
     
 };
 
-////
-/*
-var Canvas = function() {
-    var c = document.getElementsByTagName("canvas");
-    var ctx = c.getContext("2d");
-    console.log(ctx);
+Scoreboard.prototype.playerdie = function() {
+    this.playerLives--;
+    this.playerpoints('remove');
+    player.reset();
+    if (this.playerLives === 0) {
+        this.status = "nowin";
+        allEnemies = [];
+    } 
+};
+
+Scoreboard.prototype.playerpoints = function(action) {
+    if (action === "add") {
+        this.playerPoints=this.playerPoints+100;
+    } else {
+        this.playerPoints=this.playerPoints-50;
+    }
+};
+
+Scoreboard.prototype.render = function() {
+    ctx.font = "18px Arial";
+    ctx.fillStyle = "white";
+    ctx.fillText("LEVEL : " + this.gameLevel,10,75);
+    ctx.fillText("LIVES : " + this.playerLives,10,100);
+    ctx.fillText("POINTS : " + this.playerPoints,10,125);
     
-    //var c = document.getElementById("myCanvas");
-    //var ctx = c.getContext("2d");
-}
-*/
-console.log(this);
+    if (this.status === "win") {
+        ctx.font = "40px Arial";
+        ctx.fillText('YOU WIN!', 150, 275);
+    } else if (this.status === "nowin") {
+        ctx.font = "40px Arial";
+        ctx.fillText('GAME OVER!', 125, 275);
+    };
+};
 
-
-
+Scoreboard.prototype.reset = function() {
+    this.gameLevel = 1;
+    this.maxLevel = 3;
+    this.playerLives = 3;
+    this.playerPoints = 0;
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-
-var gameLevel = 1;
-var playerLives = 3;
-//var canvasInfo = new Canvas();
+var sb = new Scoreboard();
 var allEnemies = [new Enemy()];
 var player = new Player();
 
