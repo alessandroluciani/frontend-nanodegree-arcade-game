@@ -107,7 +107,7 @@ Player.prototype.update = function(keyPressed) {
                 if (this.y-85 >= 40) { 
                     this.y = this.y-85;
                 } else {
-                    this.levelUp();
+                    sb.levelUp();
                 };
                 break;
             case 'right':
@@ -130,10 +130,6 @@ Player.prototype.render = function() {
 
 Player.prototype.handleInput = function(keyPressed) {    
     this.update(keyPressed);
-};
-
-Player.prototype.levelUp = function() {
-    sb.levelUp();
 };
 
 // Scoreboard Class to control points,lives and level and other :)
