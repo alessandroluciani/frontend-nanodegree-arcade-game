@@ -1,6 +1,11 @@
 frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+SAVE THE PRINCESS POPPY !
 
-for self-checking their submission.
+Help the princess Poppy to reach water at the opposite side of road but avoiding the bad bugs.
+To play use the keyboard arrows to move the princess during her long way.
+To win the game you have to complete 10 rounds. Each round the number of bugs will increase.
+If you reach the water side you will gain 100 points but if you die you will less 50 points.
+
+Good Luck !
